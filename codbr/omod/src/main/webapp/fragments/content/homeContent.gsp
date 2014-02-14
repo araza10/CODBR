@@ -1,3 +1,9 @@
+<%
+def menuItems = [
+			[ label: "Data Entry"]
+	]
+%>
+
 <div id="featured-wrapper">
 	<div id="featured" class="container">
 	
@@ -29,7 +35,7 @@
 			<span class="icon icon-audit"></span>
 			<div class="title">
 				<h2>USER DATABASE</h2>
-				<span class="byline">View a list of system users and their assigned locations...</span>
+				<span class="byline">View a list of system users and their assigned roles</span>
 			</div>
 		</div>
 		

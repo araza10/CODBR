@@ -1,10 +1,17 @@
-<link href="/${ contextPath }/moduleResources/codbr/codemr.css" type="text/css" rel="stylesheet" />
-
-${ui.includeFragment("codbr", "header/codbrHeader")}
+<!DOCTYPE html>
+<html>
+<head>
+<link href="/${ contextPath }/moduleResources/codbr/default.css" type="text/css" rel="stylesheet" />
+</head>
+${ui.includeFragment("codbr","header/codbrHeader")}
 			
 			<%=config.content%>
+			
+			${ui.includeFragment("codbr","header/codbrFooter")}
+		</html>
 		
-${ui.includeFragment("codbr", "header/codbrFooter")}
+
+
 
 
 
