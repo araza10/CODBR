@@ -7,19 +7,41 @@
 					${ ui.includeFragment("codbr", "widget/panelMenu", [
 						heading: "Information",
 						items: [
-							[
-								label: "Birth Record",
-								href: ui.pageLink("codbr", "dataEntryForms")
-							]						]
+									[
+										label: "Birth Informant",
+										active: (section == "birth"),
+										href: ui.pageLink("codbr", "dataEntryForms", [ section: "birth" ])
+									],
+									[
+										
+										label: "Death Informant",
+										active: (section == "death"),
+										href: ui.pageLink("codbr", "dataEntryForms", [ section: "death" ])
+									]
+							
+							
+								]
 					]) }
 
 				</div>
 				</td>
+				<% if (section == "birth") { %>
 				<td>
 					<div class="content-container">
-						${ ui.includeFragment("codbr", "content/enterHtmlForm") }
+						${ ui.includeFragment("codbr", "birthRedirect", [formId: "1"]) }
 					</div>
-			</td></tr>
+			</td>
+			
+			
+							<% } else if (section == "death"){ %>
+				<td>
+					<div class="content-container">
+						${ ui.includeFragment("codbr", "content/enterHtmlForm", [formId: "2"]) }
+					</div>
+			</td>
+			<%}%>
+			
+			</tr>
 		</table>
 			
 	</div>

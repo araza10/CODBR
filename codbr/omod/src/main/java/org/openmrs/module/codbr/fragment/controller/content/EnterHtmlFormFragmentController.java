@@ -56,6 +56,7 @@ public class EnterHtmlFormFragmentController {
 						   @FragmentParam(value = "encounter", required = false) Encounter encounter,
 						   @FragmentParam(value = "visit", required = false) Visit visit,
 						   @FragmentParam(value = "returnUrl", required = false) String returnUrl,
+						   @FragmentParam(value = "formId", required = false) String hfeId,
 						   FragmentConfiguration config,
 						   FragmentModel model,
 						   HttpSession httpSession,
@@ -66,7 +67,7 @@ public class EnterHtmlFormFragmentController {
 		
 		Patient patient = Context.getPatientService().getPatient(2);
 		// Get html form from database or UI resource
-		HtmlForm hf = HtmlFormEntryUtil.getService().getHtmlForm(1);
+		HtmlForm hf = HtmlFormEntryUtil.getService().getHtmlForm(Integer.parseInt(hfeId));
 		
 
 
