@@ -8,12 +8,15 @@ public class DataEntryFormsPageController {
 	
 	public void controller(@RequestParam(value = "section", required = false) String section,
 			   PageModel model) {
-
+String htmlSection = null;
 if (section.equalsIgnoreCase("birth")) {
 section = "birth";
+htmlSection = "birthHtml";
 }
 
 model.addAttribute("section", section);
+model.addAttribute("htmlSection", htmlSection);
+
 }
 
 }

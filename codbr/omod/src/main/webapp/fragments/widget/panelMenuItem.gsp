@@ -3,11 +3,26 @@
 
 	config.require("label");
 	def onClick = config.href
+	def active  = config.active
+	
+	
 %>
 
-<div class="ke-menu-item" onclick="window.location='${onClick}'; return false;">
+
 	
+		<ul>
+		<%if(config.active){%>
+		<li class="selectedli">
+		<strong>
+	 	<a href='${onClick}'>${ config.label }</a>
+	 	</strong>
+	</li><%}
+	else{%>
+	<li>
+		<strong>
+	 	<a href='${onClick}'>${ config.label }</a>
+	 	</strong>
+	 	<%}%>
+	 	
+	 	</ul>
 
-	 ${ config.label }
-
-</div>

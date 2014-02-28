@@ -3,8 +3,11 @@
 	ui.includeJavascript("codbr", "kenyahfe.js")
 %>
 
-<script type="text/javascript" src="/${ contextPath }/moduleResources/htmlformentry/htmlFormEntry.js"></script>
-<link href="/${ contextPath }/moduleResources/htmlformentry/htmlFormEntry.css" type="text/css" rel="stylesheet" />
+<script src="/${ contextPath }/moduleResources/htmlformentry/htmlFormEntry.js?v=1.9.3.f535e9" type="text/javascript" ></script>
+<link href="/${ contextPath }/moduleResources/htmlformentry/htmlFormEntry.css?v=1.9.3.f535e9" type="text/css" rel="stylesheet" />
+<link href="/${ contextPath }/moduleResources/htmlformentry/jquery-ui-1.8.17.custom.css?v=1.9.3.f535e9" type="text/css" rel="stylesheet" />
+	<script src="/${ contextPath }/moduleResources/htmlformentry/jquery-1.4.2.min.js?v=1.9.3.f535e9" type="text/javascript" ></script>
+	<script src="/${ contextPath }/moduleResources/htmlformentry/jquery-ui-1.8.17.custom.min.js?v=1.9.3.f535e9" type="text/javascript" ></script>
 
 <script type="text/javascript">
 	\$j = jQuery; // For backwards compatibility - some forms maybe using this to reference jQuery
@@ -57,7 +60,7 @@
 		<input type="hidden" name="closeAfterSubmission" value="${ config.closeAfterSubmission }"/>
 
 		<div class="ke-panel-frame">
-			<div class="ke-panel-heading">${ command.form.name }</div>
+			
 
 			<div class="ke-form-globalerrors" style="display: none; border-radius: 0" id="general-form-error"></div>
 

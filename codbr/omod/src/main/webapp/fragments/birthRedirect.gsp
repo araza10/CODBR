@@ -1,8 +1,149 @@
+		 	<script src="/openmrs/openmrs.js?v=1.9.3.f535e9" type="text/javascript" ></script>
+			<script src="/openmrs/scripts/jquery/jquery.min.js?v=1.9.3.f535e9" type="text/javascript" ></script>
+			<script src="/openmrs/scripts/jquery-ui/js/jquery-ui.custom.min.js?v=1.9.3.f535e9" type="text/javascript" ></script>
+            <script src="/openmrs/scripts/jquery-ui/js/jquery-ui-timepicker-addon.js?v=1.9.3.f535e9" type="text/javascript" ></script>
+			<script src="/openmrs/scripts/jquery-ui/js/jquery-ui-datepicker-i18n.js?v=1.9.3.f535e9" type="text/javascript" ></script>
+			<script src="/openmrs/scripts/jquery-ui/js/jquery-ui-timepicker-i18n.js?v=1.9.3.f535e9" type="text/javascript" ></script>
+			<link href="/openmrs/scripts/jquery-ui/css/green/jquery-ui.custom.css" type="text/css" rel="stylesheet" />
+			<script src="/openmrs/dwr/engine.js?v=1.9.3.f535e9" type="text/javascript" ></script>
+			<script src="/openmrs/dwr/interface/DWRAlertService.js?v=1.9.3.f535e9" type="text/javascript" ></script>
+<script type="text/javascript">
 
-		<form id="addPatient" method="post" onSubmit="checkingEmptyFields(); return false;">
+	function updateAge() {
+		var birthdateBox = document.getElementById('dob');
+		
+		var ageBox = document.getElementById('age');
+		//alert(ageBox.value);
+		try {
+			var birthdate = parseSimpleDate(birthdateBox.value, '<openmrs:datePattern />');
+			
+			var age = getAge(birthdate);
+			
+			if (age > 0)
+				ageBox.innerHTML = "(" + age + ' <openmrs:message code="Person.age.years"/>)';
+			else if (age == 1)
+				ageBox.innerHTML = '(1 <openmrs:message code="Person.age.year"/>)';
+			else if (age == 0)
+				ageBox.innerHTML = '( < 1 <openmrs:message code="Person.age.year"/>)';
+			else
+				ageBox.innerHTML = '( ? )';
+			ageBox.style.display = "";
+		} catch (err) {
+			ageBox.innerHTML = "";
+			ageBox.style.display = "none";
+		}
+	}
+	
+	function getAge(d, now) {
+		var age = -1;
+		if (typeof(now) == 'undefined') now = new Date();
+		while (now >= d) {
+			age++;
+			d.setFullYear(d.getFullYear() + 1);
+		}
+		return age;
+	}
+	
+	function showCalendar(obj, yearsPrevious) {
+		// if the object doesn't have an id, just set it to some random text so jq can use it
+	if(!obj.id) {
+		obj.id = "something_random" + (Math.random()*1000);
+	}
+	
+	//set appendText to something so it doesn't automagically pop into the page
+	var opts = { appendText: " " };
+	if (yearsPrevious)
+		opts["yearRange"] = "c-" + yearsPrevious + ":c10";
+	
+	var dp = new DatePicker('dd/mm/yyyy', obj.id, opts);
+	jQuery.datepicker.setDefaults(jQuery.datepicker.regional['en_GB']);
+	
+	obj.onclick = null;
+	dp.show();
+	return false;
+		}
+		
+
+	
+	
+	function findMissingFields()
+	{
+		var givenName = jQuery('#gname').val();
+		var familyName = jQuery('#fmyname').val();
+		//var id = jQuery('#id').val();
+		var val = jQuery('input[name="gend"]:checked').val();
+		var dob = jQuery('#dob').val();
+		
+		
+		var genderValue;
+		if(val == "M")
+			{
+			genderValue = "checked";
+			
+			}
+		else if(val =="F"){
+			genderValue = "checked";
+			
+		}
+		else{
+			genderValue = "unchecked";
+			
+		}
+		
+			
+		
+		if(givenName == "" || familyName == "" || genderValue == "unchecked" || dob == "")
+			{
+				alert("Please fill in fields marked with Red *");
+				return false;
+				
+			}
+			
+			
+			submitForm();
+			  	
+	}
+	
+	function submitForm()
+	{
+				var form = jQuery('#addPatient');
+				alert("Posting");
+				jQuery.post(form.attr('action'), form.serialize(), function(result) {
+				
+				
+			if (result.success) {
+				var whichSection= "";
+				
+				var sectionSelection = '${section}';
+				
+				if(sectionSelection == 'birth')
+				{
+				//adding which html section to display on this basis in DataEntryForms controller
+				
+				window.location = '/openmrs/codbr/dataEntryForms.page?section=${htmlSection}';
+				}
+				
+
+				
+			}
+			else{
+			alert("inside else");
+			ui.reloadPage();
+			alert("after reload");
+			}
+			
+		}, 'json')
+	
+	}
+	
+
+	
+	</script>
+
+<form id="addPatient" method="post" action="${ ui.actionLink("codbr", "birthRedirect", "submit") }" onSubmit="findMissingFields(); return false;">
 <div  align="left"><input type="hidden" name="certificateType" value="birthcertificate"/>
 <br>
-<div style="margin-bottom: 5px;font-size: large;"><div style="width: 200px; float: left;">Identifier <span style ="color:red">*</span></div> <input name="id" style="width: 300px;border: 0px;" value="<%=request.getSession().getAttribute("patientIdentifier")%>"/></div>
+<div style="margin-bottom: 5px;font-size: large;"><div style="width: 200px; float: left;">Identifier <span style ="color:red">*</span></div> <input name="id" style="width: 300px;border: 0px;" value="${ patientIdentifier }"/></div>
 
 <div style="margin-bottom: 5px;"><div style="width: 200px; float: left;">First Name <span style ="color:red">*</span></div> <input type="text" name="gname" id="gname"/></div>
 
@@ -15,25 +156,11 @@
 <div  align="left">
 
 <div style="margin-bottom: 5px;"><div style="width: 200px; float: left;">Gender <span style ="color:red">*</span></div> <input type="radio" name="gend" id="gend" value="M"/>Male<input type="radio" id="gend" name="gend" value="F"/>Female</div>
-				
-				
-<!-- <div style="margin-bottom: 5px;"><div style="width: 200px; float: left;">Nationality</div>
-<select name="citizenship">
-  <option value="citizen_by_birth">Citizen by birth</option>
-  <option value="naturalized_citizen">Naturalized citizen</option>
-  <option value="alien">Foreign National</option>
 
-</select></div> -->
 
 </div>
 
-<!-- <div  align="left">
- --><!-- <div style="margin-bottom: 5px;">
-<div style="width: 200px; float: left;">
-Ethnicity
-</div>
-<input type="text" name="ethnicity"/>
-</div> -->
+
 <div style="font-size : large;">Place of Birth</div><br>
 <div style="margin-bottom: 5px;">
 <div style="width: 200px; float: left;">
@@ -41,12 +168,7 @@ Country
 </div>
 <input type="text" name="placebirth"/>
 </div>
-<!-- <div style="margin-bottom: 5px;"> NOT NEEDED - MAIMOONA
-<div style="width: 200px; float: left;">
-Province
-</div>
-<input type="text" name="provincebirth"/>
-</div> -->
+
 
 <div style="margin-bottom: 5px;">
 <div style="width: 200px; float: left;">
@@ -68,113 +190,7 @@ Locality Type</div>
 </select>
 </div>
 </div>
-<!-- <div style="font-size : large; float: left;">Place of Death</div><br>
-<div style="margin-bottom: 5px;">
-<div style="width: 200px; float: left;">
-Country
-</div>
-<input type="text" name="placedeath"/>
-</div>
-<div style="margin-bottom: 5px;">
-<div style="width: 200px; float: left;">
-Province
-</div>
-<input type="text" name="provincedeath"/>
-</div>
-<div style="margin-bottom: 5px;">
-<div style="width: 200px; float: left;">
-City/Village
-</div>
-<input type="text" name="citydeath"/>
-</div>
-<div style="margin-bottom: 5px;">
-<div style="width: 200px; float: left;">
-County/District
-</div>
-<input type="text" name="countydeath"/>
-</div>
-<div style="margin-bottom: 5px;"><div style="width: 200px; float: left;">
-Locality Type</div>
-<select name="urbanruraldeath">
-  <option value="Urban">Urban</option>
-  <option value="Rural">Rural</option>
-</select>
-</div>
 
-</div>
-<div style="font-size : large; float: left;">Place of Usual Residence</div><br>
-<div style="margin-bottom: 5px;">
-<div style="width: 200px; float: left;">
-Country
-</div>
-<input type="text" name="addressusual"/>
-</div>
-<div style="margin-bottom: 5px;">
-<div style="width: 200px; float: left;">
-Province
-</div>
-<input type="text" name="provinceusual"/>
-</div>
-<div style="margin-bottom: 5px;">
-<div style="width: 200px; float: left;">
-City/Village
-</div>
-<input type="text" name="cityusual"/>
-</div>
-<div style="margin-bottom: 5px;">
-<div style="width: 200px; float: left;">
-County/District
-</div>
-<input type="text" name="countyusual"/>
-</div>
-<div style="margin-bottom: 5px;"><div style="width: 200px; float: left;">
-Locality Type</div>
-<select name="urbanrural">
-  <option value="Urban">Urban</option>
-  <option value="Rural">Rural</option>
-  </select>
-</div>
-<div style="font-size : large; float: left;">Place of Previous Residence (1-5 years before death)</div><br>
-<div style="margin-bottom: 5px;">
-<div style="width: 200px; float: left;">
-Country
-</div>
-<input type="text" name="address2"/>
-</div>
-<div style="margin-bottom: 5px;">
-<div style="width: 200px; float: left;">
-Province
-</div>
-<input type="text" name="provincelast"/>
-</div>
-<div style="margin-bottom: 5px;">
-<div style="width: 200px; float: left;">
-City/Village
-</div>
-<input type="text" name="citylast"/>
-</div>
-<div style="margin-bottom: 5px;">
-<div style="width: 200px; float: left;">
-County/District
-</div>
-<input type="text" name="countylast"/>
-</div>
-<div style="margin-bottom: 5px;">
-<div style="width: 200px; float: left;">
-Locality Type</div>
-<select name="urbanrurallast">
-  <option value="Urban">Urban</option>
-  <option value="Rural">Rural</option>
-</select></div> -->
-
-
-<!-- <div  align="left">
- --><!-- <div style="margin-bottom: 5px;">
-<div style="width: 200px; float: left;">
-Marriage Date
-</div>
-<input type="text" id="dom" name="dom" onfocus="showCalendar(this,60)"/>
-</div> -->
 
 <div style="margin-bottom: 5px;">
 <div style="width: 200px; float: left;">
@@ -192,100 +208,10 @@ Mother Name
 
 <div style="margin-bottom: 5px;">
 <div style="width: 200px; float: left;">
-Date of Birth
+Date of Birth<span style ="color:red">*</span>
 </div>
 <input type="text" id="dob" name="dob" onchange="updateAge();" onfocus="showCalendar(this,60)"/>
 </div>
 
- <div style="margin-bottom: 5px;"><div style="width: 200px; float: left;">Is Date of Birth Known ?<span style ="color:red">*</span></div>
-
-						
-							
-				<input type="hidden" name="_${status.expression}"/>
-				<input type="checkbox" name="${status.expression}" 
-				
-					   <c:if test="${status.value == true}">checked</c:if>
-					   onclick="personBirthClicked(this)" id="personBirth"
-				/>
-				
-
-
-			<script type="text/javascript">
-				function personBirthClicked(input) {
-					
-					if (input.checked) {
-						document.getElementById("birthInformation").style.display = "";
-					}
-					else {
-						document.getElementById("birthInformation").style.display = "none";
-						document.getElementById("deathDate").value = "";
-						var cause = document.getElementById("causeOfDeath");
-						if (cause != null)
-							cause.value = "";
-					}
-				}
-			</script>
-
-							
-</div>  
-
-
-<div id="birthInformation">
-<!-- Date of Birth<input type="text" id="dob" name="dob" onchange="updateAge();" onfocus="showCalendar(this,60)"/>
- -->	 <input type="hidden" name="_${status.expression}"> 
-                    <input type="checkbox" name="${status.expression}" value="true"
-						<c:if test="${status.value == true}">checked</c:if> 
-						   id="deathdateEstimatedInput" 
-					 /> 
-<!--  <script type="text/javascript">				
-					//here setting DOB Fields
-					personBirthClicked(document.getElementById("personBirth"));
-				</script> 
-				<div style="margin-bottom: 5px;"><div style="width: 200px; float: left;">Age:<span id="age"></span></div></div><br>
-	</div>	 -->		
-<br>
- <div style="margin-bottom: 5px;"><div style="width: 200px; float: left;">Is Date of Death Known ?<span style ="color:red">*</span></div>
-						
-							
-				<input type="hidden" name="_${status.expression}"/>
-				<input type="checkbox" name="${status.expression}" 
-				
-					   <c:if test="${status.value == true}">checked</c:if>
-					   onclick="personDeadClicked(this)" id="personDead"
-				/>
-
-			<script type="text/javascript">
-				function personDeadClicked(input) {
-					
-					if (input.checked) {
-						document.getElementById("deathInformation").style.display = "";
-					}
-					else {
-						document.getElementById("deathInformation").style.display = "none";
-						document.getElementById("deathDate").value = "";
-						var cause = document.getElementById("causeOfDeath");
-						if (cause != null)
-							cause.value = "";
-					}
-				}
-			</script>
-
-							
-</div> 
-<div id="deathInformation">
-<input type="text" id="dod" name="dod" onfocus="showCalendar(this,60)"/>
-	<input type="hidden" name="_${status.expression}"> 
-                    <input type="checkbox" name="${status.expression}" value="true"
-						<c:if test="${status.value == true}">checked</c:if> 
-						   id="deathdateEstimatedInput" 
-					 />
- <script type="text/javascript">				
-					//here setting DOB Fields
-					personDeadClicked(document.getElementById("personDead"));
-				</script> 
-				
-	</div>
-	
-	</div>
-	<br/> 
 <input type="submit" value="Save Patient"/></form>
+
