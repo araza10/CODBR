@@ -1,18 +1,44 @@
 <!DOCTYPE html>
 <html>
 <head>
-<link href="/${ contextPath }/moduleResources/codbr/default.css" type="text/css" rel="stylesheet" />
-<link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700,900" rel="stylesheet" />
+	<title>eCODIRS</title>
+	<meta name="keywords" content="" />
+	<meta name="description" content="" />
+	<link href="/${ contextPath }/moduleResources/codbr/default.css?v=1.1" type="text/css" rel="stylesheet" />
 </head>
-${ui.includeFragment("codbr","header/codbrHeader")}
-			
-			<%=config.content%>
-			
-			${ui.includeFragment("codbr","header/codbrFooter")}
-		</html>
-		
+<body>
+<div class="container">
 
+${ui.includeFragment("codbr", "header/codbrHeader")}
 
+<div id="featured-wrapper">
+	<div id="featured">
+	<table class="layouttable"><tr>
+	<td class="sidebar">
+	<div id="sidebarContentContainerDiv">
+	
+	 <% if (config.sidebar) { %>
+		${ui.includeFragment("codbr", config.sidebar)}
+	 <% } %>
+	 
+	</div>
+	</td>
+	<td class="content-container">
+	<div>
+	
+		<%= config.content %>
+	
+	<!-- END CONTENT CONTAINER-->
+	</div>
+	</td></tr></table>
+	</div>
+</div>
+			
+${ui.includeFragment("codbr", "header/codbrFooter")}
+	
+</div>	
+</body>
+</html>
 
 
 

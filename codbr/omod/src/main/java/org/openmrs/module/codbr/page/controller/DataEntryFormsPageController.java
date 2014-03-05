@@ -13,6 +13,21 @@ if (section.equalsIgnoreCase("birth")) {
 section = "birth";
 htmlSection = "birthHtml";
 }
+else if(section.equalsIgnoreCase("foetal"))
+{
+	section = "foetal";
+	htmlSection = "foetalHtml";
+}
+
+else if(section.equalsIgnoreCase("verbal"))
+{
+	section = "verbal";
+}
+
+else if(section.equalsIgnoreCase("death"))
+{
+	section = "death";
+}
 
 model.addAttribute("section", section);
 model.addAttribute("htmlSection", htmlSection);
